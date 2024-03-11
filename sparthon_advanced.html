@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>2024 신년계획 버킷리스트</title>
+    <title>2024 스파르톤 버킷리스트</title>
     <style>
       html {
         display: flex;
@@ -120,6 +120,10 @@
         background-size: cover;
         background-position: center;
         justify-content: center;
+      }
+      .bucket:hover {
+        transform: scale(1.1); /* 확대되는 비율을 설정 */
+        transition: transform 0.3s ease-in-out; /* 애니메이션 속도와 효과를 설정 */
       }
 
       .img1 {
@@ -285,7 +289,7 @@
 
             // 삭제 버튼 생성
             var deleteBtn = document.createElement("button");
-            deleteBtn.textContent = "ㅤ";
+            deleteBtn.textContent = "";
             deleteBtn.classList.add("delete-btn");
             deleteBtn.onclick = function () {
               // 삭제 버튼 클릭 시 해당 div를 제거하고 로컬 스토리지에서도 삭제
@@ -301,10 +305,42 @@
             document.querySelector(".flex-row").appendChild(newDiv);
           });
         }
+
+        // 페이지 로드 시 이전 상태 복원
+        document.addEventListener("DOMContentLoaded", (event) => {
+          const buckets = document.querySelectorAll(".bucket");
+          buckets.forEach((bucket, index) => {
+            // 로컬 스토리지에서 상태 읽기
+            const isDone = localStorage.getItem("bucket" + index) === "done";
+            if (isDone) {
+              bucket.classList.add("done");
+            }
+          });
+        });
+
+        // 버킷 리스트 클릭 이벤트
+        document
+          .querySelector(".flex-row")
+          .addEventListener("click", function (event) {
+            // 이벤트가 발생한 요소가 .bucket 클래스를 가지고 있는지 확인
+            if (event.target.classList.contains("bucket")) {
+              // 클래스 토글
+              event.target.classList.toggle("done");
+
+              // 로컬 스토리지에 상태 저장
+              const index = Array.from(
+                document.querySelectorAll(".bucket")
+              ).indexOf(event.target);
+              if (event.target.classList.contains("done")) {
+                localStorage.setItem("bucket" + index, "done");
+                alert("달성을 축하합니다!");
+              } else {
+                localStorage.setItem("bucket" + index, "");
+              }
+            }
+          });
       </script>
     </div>
-
-    <script src="script.js"></script>
   </body>
   <div class="bgm">
     <audio src="src/bgm.mp3" controls autoplay loop></audio>
